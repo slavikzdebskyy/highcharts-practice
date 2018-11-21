@@ -17,10 +17,28 @@ span {
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 3;
   &.check {
     max-width: 50px;
   }
 }
-input {
-  
+.radio-conainer {
+  width: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.forms-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  span.label {
+    width: 100%;
+    font-weight: 700;
+    color: cadetblue;
+  }
 }

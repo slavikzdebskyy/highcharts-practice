@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
 
 import './App.scss';
 
 class Cells extends Component {
+  
     render () {
       return (
         this.props.arr.map((el, index)=> {  
@@ -14,10 +16,9 @@ class Cells extends Component {
             <span key = {index}>{el}</span>
           )               
       })
-      )
-    }
+    )
   }
-
+}
 
 class App extends Component {
 
@@ -25,13 +26,16 @@ class App extends Component {
     super(props)
     this.state = {
       data: [],
-      serial: []
+      serial: [],
+      requestes: ['react', 'wordpress', 'javascript', 'angular'],
+      newRequest: '',
+      type: 'area',
+      stacking: 'normal'
     }
   }
 
   componentDidMount() {
-    const requestes = ['react', 'wordpress', 'javascript', 'angular'];
-    requestes.forEach(req => this.getData(req))    
+    this.state.requestes.forEach(req => this.getData(req))    
   }
 
   getData = request => {
@@ -63,7 +67,7 @@ class App extends Component {
     .catch(err=>console.error(err));    
   }
   
-  handleChange = (event) => {
+  handleChangeToggleRequest = (event) => {
     const newArr = this.state.data.slice();
     if (event.target.checked) {
       const newEl = newArr.find(el=>el.name === event.target.name);
@@ -77,25 +81,39 @@ class App extends Component {
       })
     }
   }
+  handleSubmitNewRequest = (event) => {
+    event.preventDefault();    
+    this.getData(this.state.newRequest)
+    this.setState({newRequest: ''})
+  }
+  handleChangeNewRequest (event) {
+    this.setState({newRequest: event.target.value})
+  }
+  handleChangeLayout = event => {
+    this.setState({ type: event.target.value });
+  };
+  handleChangeStacking = event => {
+    this.setState({ stacking: event.target.value });
+  }
   
-
+  
 
   render() {
     
     
     const options = {
       chart: {
-        type: 'bar'
+        type: this.state.type
       },
       legend: {
         layout: 'horizontal',        
       },
       title: {
-        text: 'My stock chart'
+        text: 'I know how chart works ..'
       },
       plotOptions: {
         series: {
-            stacking: 'normal'
+            stacking: this.state.stacking
         }
       },
       xAxis: {
@@ -103,6 +121,7 @@ class App extends Component {
       },
       series: [...this.state.serial]
     }
+    
     
     return (
       <div className="App">        
@@ -121,7 +140,7 @@ class App extends Component {
                 <Checkbox
                   color= "primary"
                   name = {elem.name}
-                  onChange={this.handleChange}
+                  onChange={this.handleChangeToggleRequest}
                 />
                 </span>
                 <span>{elem.name}</span>
@@ -129,6 +148,66 @@ class App extends Component {
               </div>           
             )
           })}
+        </div>
+
+        <div className = 'forms-container'>          
+          <form  noValidate autoComplete="off" onSubmit = {this.handleSubmitNewRequest}>
+          <TextField 
+            id = 'standard-dense'
+            label = 'Enter new request ...'
+            margin = 'dense'
+            value = {this.state.newRequest}
+            onChange = {this.handleChangeNewRequest.bind(this)}
+            />        
+          </form> 
+          <div className = 'radio-group'>
+            <span className = 'label'>STACKING</span>
+            <div className = 'radio-conainer'>
+              <Radio
+                checked={this.state.stacking === 'normal'}
+                onChange={this.handleChangeStacking}
+                value = 'normal'             
+              />
+              Join
+            </div>
+            <div className = 'radio-conainer'>
+              <Radio
+                checked={this.state.stacking === ''}
+                onChange={this.handleChangeStacking}
+                value = ''          
+              />
+              Split
+            </div> 
+          </div> 
+          <div className = 'radio-group'>
+            <span className = 'label'>TYPE</span>
+            <div className = 'radio-conainer'>
+              <Radio
+                checked={this.state.type === 'bar'}
+                onChange={this.handleChangeLayout}
+                value = 'bar'
+                label = 'Bar'
+                name = 'bar'             
+              />
+              Bar
+            </div>
+            <div className = 'radio-conainer'>
+              <Radio
+                checked={this.state.type === 'area'}
+                onChange={this.handleChangeLayout}
+                value = 'area'             
+              />
+              Area
+            </div>
+            <div className = 'radio-conainer'>
+              <Radio
+                checked={this.state.type === 'column'}
+                onChange={this.handleChangeLayout}
+                value = 'column'          
+              />
+              Column
+            </div> 
+          </div>         
         </div>
         <HighchartsReact
             highcharts={Highcharts}
@@ -139,5 +218,6 @@ class App extends Component {
     ) 
   }  
 }
+
 
 export default App;
