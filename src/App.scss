@@ -1,0 +1,26 @@
+.table,
+.row {
+  width: 100%;
+}
+.row {
+  display: flex;
+  border-bottom: 2px solid #888;
+}
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  background-color: lightblue;
+}
+span {
+  width: 20%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &.check {
+    max-width: 50px;
+  }
+}
+input {
+  
+}
